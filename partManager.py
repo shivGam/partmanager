@@ -16,19 +16,43 @@ def addItem():
     if parttxt.get()=='' or customertxt.get()=='' or retailtxt.get()=='' or pricetxt.get()=='':
         messagebox.showerror('Required field','Please Fill Fields')
         return
-    db.insert(parttxt.get(),customertxt.get(),retailtxt.get(),parttxt.get())#insert whats in the variable (Whatever entered in Entry)
+    db.insert(parttxt.get(),customertxt.get(),retailtxt.get(),pricetxt.get())#insert whats in the variable (Whatever entered in Entry)
     partList.delete(0, END)
-    partList.insert(END,(parttxt.get(),customertxt.get(),retailtxt.get(),parttxt.get()))
+    partList.insert(END,(parttxt.get(),customertxt.get(),retailtxt.get(),pricetxt.get()))
+    clearItem()
     populateList()
-#you stopped here bro
+
+def selectItem(event):
+    try:
+        global sIteam
+        index = partList.curselection()[0]
+        sIteam=partList.get(index)
+
+        partEntry.delete(0, END)
+        partEntry.insert(END, sIteam[1])
+        customerEntry.delete(0, END)
+        customerEntry.insert(END, sIteam[2])
+        retailEntry.delete(0, END)
+        retailEntry.insert(END, sIteam[3])
+        priceEntry.delete(0, END)
+        priceEntry.insert(END, sIteam[4])
+    except IndexError:
+        pass
+
 def removeItem():
-    print("remove")
+    db.remove(sIteam[0])
+    clearItem()
+    populateList()
 
 def updateItem():
-    print("update")
+    db.update(sIteam[0],parttxt.get(),customertxt.get(),retailtxt.get(),pricetxt.get())
+    populateList()
 
 def clearItem():
-    print("clear")
+    partEntry.delete(0,END)
+    customerEntry.delete(0,END)
+    retailEntry.delete(0,END)
+    priceEntry.delete(0,END)
 
 parttxt = StringVar()
 partLabel= Label(app, text='Part Name',font=('bold',12),pady=10,padx=10)#pady: space for grid from above
@@ -60,6 +84,8 @@ scrollBar=Scrollbar(app)
 scrollBar.grid(row=3,column=3)
 partList.configure(yscrollcommand=scrollBar.set)#setting parList and scrollbar together
 scrollBar.configure(command=partList.yview)
+
+partList.bind('<<ListboxSelect>>',selectItem)
 
 addButton=Button(app,text='Add Part', width=10,command=addItem)
 addButton.grid(row=2,column=0,pady=20)

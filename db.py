@@ -1,7 +1,7 @@
 import sqlite3
 class Database:
     def __init__(self, db): #__init__ -> initializer,self-> "this" feature in other Language
-        self.conn =sqlite3.connect(db) #conn(kinda variable) -> property ,connect -> connects with database
+        self.conn = sqlite3.connect(db) #conn(kinda variable) -> property ,connect -> connects with database
         self.cur = self.conn.cursor() #cursor -> executes queries
         self.cur.execute("CREATE TABLE IF NOT EXISTS parts (id INTEGER PRIMARY KEY, part text, customer text, retailer text ,price text)")
         self.conn.commit()
@@ -16,8 +16,8 @@ class Database:
                          (part, customer, retailer, price))# NULL,? -> protection from SQL injection
         self.conn.commit()
 
-    def remove(self,id):
-        self.cur.execute=("DELETE FROM parts WHERE id=?",(id,))
+    def remove(self, id):
+        self.cur.execute("DELETE FROM parts WHERE id=?", (id,))
         self.conn.commit()
 
     def update(self, id, part, customer, retailer, price):
